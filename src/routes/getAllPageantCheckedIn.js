@@ -14,7 +14,7 @@ export default function getAllPageantCheckedInRoutes(pageantlistCollection) {
       return res.json({
         success: true,
         count: checkedInList.length,
-        data: checkedInList
+        contestants: checkedInList
       });
     } catch (err) {
       console.error("Get All Pageant Checked In Error:", err);
