@@ -23,6 +23,7 @@ import pageantRegisterRoutes from "./routes/pageantRegister.js";
 import getPageantContestantRoutes from "./routes/getPageantContestant.js";
 import pageantCheckinRoutes from "./routes/pageantCheckin.js";
 import getAllPageantCheckedInRoutes from "./routes/getAllPageantCheckedIn.js";
+import adminPageantRoutes from "./routes/adminPageant.js";
 
 dotenv.config();
 
@@ -93,11 +94,18 @@ app.use("/api/pageant/checkin", pageantCheckinRoutes(pageantlistCollection));
     }
   );
 
+//   app.use(
+//     "/api/admin/pageant-checked-in", // Clean admin-spaced path
+//     requireAdmin,
+//     allowRoles("full", "pageant", "volunteer"), // Define who can view this data
+//     getAllPageantCheckedInRoutes(pageantlistCollection)
+//   );
+
   app.use(
-    "/api/admin/pageant-checked-in", // Clean admin-spaced path
+    "/api/admin/pageant",
     requireAdmin,
-    allowRoles("full", "pageant", "volunteer"), // Define who can view this data
-    getAllPageantCheckedInRoutes(pageantlistCollection)
+    allowRoles("full", "pageant"),
+    adminPageantRoutes(pageantlistCollection)
   );
 
   // Start server
