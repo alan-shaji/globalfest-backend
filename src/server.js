@@ -19,6 +19,10 @@ import adminVolunteersRoutes from "./routes/adminVolunteers.js";
 import getGalleryArtistsRoutes from "./routes/getGalleryArtists.js"; 
 // ⏬ ADD THIS IMPORT AT THE TOP
 import contestantsRoutes from "./routes/contestants.js"; 
+import pageantRegisterRoutes from "./routes/pageantRegister.js";
+import getPageantContestantRoutes from "./routes/getPageantContestant.js";
+import pageantCheckinRoutes from "./routes/pageantCheckin.js";
+import getAllPageantCheckedInRoutes from "./routes/getAllPageantCheckedIn.js";
 
 dotenv.config();
 
@@ -37,6 +41,7 @@ async function startServer() {
   const galleryArtistsCollection = db.collection("galleryartists");
   // ⏬ ADD THIS LINE FOR YOUR COLLECTION
   const contestantsCollection = db.collection("contestants");
+  const pageantlistCollection = db.collection("pageantlist");
 
   // One email = one vote
   await votesCollection.createIndex({ email: 1 }, { unique: true });
@@ -61,6 +66,10 @@ async function startServer() {
 
   app.use("/api/admin/auth", adminAuthRoutes(adminsCollection));
 
+ app.use("/api/pageant/register", pageantRegisterRoutes(pageantlistCollection));
+app.use("/api/pageant/get", getPageantContestantRoutes(pageantlistCollection));
+app.use("/api/pageant/checkin", pageantCheckinRoutes(pageantlistCollection));
+
   app.use(
     "/api/admin/artists",
     requireAdmin,
@@ -78,10 +87,17 @@ async function startServer() {
   app.use(
     "/api/admin/dashboard",
     requireAdmin,
-    allowRoles("full", "artist", "volunteer"),
+    allowRoles("full", "artist", "volunteer","pageant"),
     (req, res) => {
       res.json({ success: true, message: "Admin dashboard access granted" });
     }
+  );
+
+  app.use(
+    "/api/admin/pageant-checked-in", // Clean admin-spaced path
+    requireAdmin,
+    allowRoles("full", "pageant", "volunteer"), // Define who can view this data
+    getAllPageantCheckedInRoutes(pageantlistCollection)
   );
 
   // Start server
