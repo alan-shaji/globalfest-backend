@@ -132,30 +132,35 @@ const verifyDomainMX = (domain) => {
   });
 };
 
-export default function voteRoutes(votesCollection) {
+// 🔐 ACCEPT THE AUTH MIDDLEWARES FROM SERVER.JS
+export default function voteRoutes(votesCollection, requireAdmin, allowRoles) {
   
-  // 🗳️ NEW: Secure API Endpoint to fetch live metrics grouped by contestant
-  router.get("/results", async (req, res) => {
-    try {
-      // Aggregate totals directly via MongoDB for fast reading performance
-      const standings = await votesCollection.aggregate([
-        {
-          $group: {
-            _id: "$contestant",
-            totalVotes: { $sum: 1 }
-          }
-        },
-        { $sort: { totalVotes: -1 } } // Order from highest votes to lowest
-      ]).toArray();
+  // 🗳️ SECURED: Leverages your exact token checks and role systems
+  router.get(
+    "/results", 
+    requireAdmin, 
+    allowRoles("full", "pageant"), 
+    async (req, res) => {
+      try {
+        const standings = await votesCollection.aggregate([
+          {
+            $group: {
+              _id: "$contestant",
+              totalVotes: { $sum: 1 }
+            }
+          },
+          { $sort: { totalVotes: -1 } }
+        ]).toArray();
 
-      return res.json({ success: true, standings });
-    } catch (err) {
-      console.error("Error retrieving voting dashboard data:", err);
-      return res.status(500).json({ success: false, message: "Could not aggregate standings." });
+        return res.json({ success: true, standings });
+      } catch (err) {
+        console.error("Aggregation Error:", err);
+        return res.status(500).json({ success: false, message: "Could not retrieve standings." });
+      }
     }
-  });
+  );
 
-  // Your existing POST route remains completely untouched
+  // 🌍 PUBLIC: Anyone can hit this route to cast their submission vote
   router.post("/", async (req, res) => {
     const { email, contestant } = req.body;
 

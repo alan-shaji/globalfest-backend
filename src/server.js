@@ -48,7 +48,8 @@ async function startServer() {
   await votesCollection.createIndex({ email: 1 }, { unique: true });
 
   // Routes
-  app.use("/api/vote", voteRoutes(votesCollection));
+//   app.use("/api/vote", voteRoutes(votesCollection));
+app.use("/api/vote", voteRoutes(votesCollection, requireAdmin, allowRoles));
   
   // ⏬ ADD THIS LINE TO MOUNT YOUR CONTESTANTS ROUTE
   app.use("/api/contestants", contestantsRoutes(contestantsCollection));
