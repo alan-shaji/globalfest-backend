@@ -48,7 +48,7 @@ async function startServer() {
   const contestantsCollection = db.collection("contestants");
   const pageantlistCollection = db.collection("pageantlist");
   const vendorFeedbackCollection = db.collection("vendorfeedback");
-  const vendorFeedbackCollection = db.collection("vendorfeedback");
+ 
 
 
 
