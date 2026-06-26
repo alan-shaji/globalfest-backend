@@ -26,6 +26,9 @@ import getAllPageantCheckedInRoutes from "./routes/getAllPageantCheckedIn.js";
 import adminPageantRoutes from "./routes/adminPageant.js";
 import vendorFeedbackRoutes from "./routes/vendorFeedback.js";
 import adminVendorFeedbackRoutes from "./routes/adminVendorFeedback.js";
+import artistFeedbackRoutes from "./routes/artistFeedback.js";
+import adminArtistFeedbackRoutes from "./routes/adminArtistFeedback.js";
+
 
 
 
@@ -48,6 +51,8 @@ async function startServer() {
   const contestantsCollection = db.collection("contestants");
   const pageantlistCollection = db.collection("pageantlist");
   const vendorFeedbackCollection = db.collection("vendorfeedback");
+  const artistFeedbackCollection = db.collection("artistfeedback");
+
  
 
 
@@ -80,6 +85,8 @@ app.use("/api/vote", voteRoutes(votesCollection, requireAdmin, allowRoles));
 app.use("/api/pageant/get", getPageantContestantRoutes(pageantlistCollection));
 app.use("/api/pageant/checkin", pageantCheckinRoutes(pageantlistCollection));
 app.use("/api/vendor-feedback", vendorFeedbackRoutes(vendorFeedbackCollection));
+app.use("/api/artist-feedback", artistFeedbackRoutes(artistFeedbackCollection));
+
 
 
   app.use(
@@ -125,6 +132,14 @@ app.use("/api/vendor-feedback", vendorFeedbackRoutes(vendorFeedbackCollection));
   allowRoles("full"),
   adminVendorFeedbackRoutes(vendorFeedbackCollection)
 );
+
+app.use(
+  "/api/admin/artist-feedback",
+  requireAdmin,
+  allowRoles("full"),
+  adminArtistFeedbackRoutes(artistFeedbackCollection)
+);
+
 
 
   // Start server
