@@ -24,6 +24,10 @@ import getPageantContestantRoutes from "./routes/getPageantContestant.js";
 import pageantCheckinRoutes from "./routes/pageantCheckin.js";
 import getAllPageantCheckedInRoutes from "./routes/getAllPageantCheckedIn.js";
 import adminPageantRoutes from "./routes/adminPageant.js";
+import vendorFeedbackRoutes from "./routes/vendorFeedback.js";
+import adminVendorFeedbackRoutes from "./routes/adminVendorFeedback.js";
+
+
 
 dotenv.config();
 
@@ -43,6 +47,10 @@ async function startServer() {
   // ⏬ ADD THIS LINE FOR YOUR COLLECTION
   const contestantsCollection = db.collection("contestants");
   const pageantlistCollection = db.collection("pageantlist");
+  const vendorFeedbackCollection = db.collection("vendorfeedback");
+  const vendorFeedbackCollection = db.collection("vendorfeedback");
+
+
 
   // One email = one vote
   await votesCollection.createIndex({ email: 1 }, { unique: true });
@@ -71,6 +79,8 @@ app.use("/api/vote", voteRoutes(votesCollection, requireAdmin, allowRoles));
  app.use("/api/pageant/register", pageantRegisterRoutes(pageantlistCollection));
 app.use("/api/pageant/get", getPageantContestantRoutes(pageantlistCollection));
 app.use("/api/pageant/checkin", pageantCheckinRoutes(pageantlistCollection));
+app.use("/api/vendor-feedback", vendorFeedbackRoutes(vendorFeedbackCollection));
+
 
   app.use(
     "/api/admin/artists",
@@ -108,6 +118,14 @@ app.use("/api/pageant/checkin", pageantCheckinRoutes(pageantlistCollection));
     allowRoles("full", "pageant"),
     adminPageantRoutes(pageantlistCollection)
   );
+
+  app.use(
+  "/api/admin/vendor-feedback",
+  requireAdmin,
+  allowRoles("full"),
+  adminVendorFeedbackRoutes(vendorFeedbackCollection)
+);
+
 
   // Start server
   app.listen(process.env.PORT, () =>
