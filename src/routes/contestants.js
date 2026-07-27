@@ -3,7 +3,7 @@ import express from "express";
 export default function contestantsRoutes(contestantsCollection) {
   const router = express.Router();
 
-  // GET: Fetch live data for your grid component
+  // GET: Fetch live data  grid component
   router.get("/getAllContestants", async (req, res) => {
     try {
       // Find everything and sort by roster string/number order

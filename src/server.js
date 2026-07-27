@@ -17,7 +17,6 @@ import { allowRoles } from "./middleware/roles.js";
 import adminArtistsRoutes from "./routes/adminArtists.js";
 import adminVolunteersRoutes from "./routes/adminVolunteers.js";
 import getGalleryArtistsRoutes from "./routes/getGalleryArtists.js"; 
-// ⏬ ADD THIS IMPORT AT THE TOP
 import contestantsRoutes from "./routes/contestants.js"; 
 import pageantRegisterRoutes from "./routes/pageantRegister.js";
 import getPageantContestantRoutes from "./routes/getPageantContestant.js";
@@ -47,7 +46,6 @@ async function startServer() {
   const volunteersCollection = db.collection("volunteers");
   const adminsCollection = db.collection("admins");
   const galleryArtistsCollection = db.collection("galleryartists");
-  // ⏬ ADD THIS LINE FOR YOUR COLLECTION
   const contestantsCollection = db.collection("contestants");
   const pageantlistCollection = db.collection("pageantlist");
   const vendorFeedbackCollection = db.collection("vendorfeedback");
@@ -61,10 +59,10 @@ async function startServer() {
   await votesCollection.createIndex({ email: 1 }, { unique: true });
 
   // Routes
-//   app.use("/api/vote", voteRoutes(votesCollection));
+
 app.use("/api/vote", voteRoutes(votesCollection, requireAdmin, allowRoles));
   
-  // ⏬ ADD THIS LINE TO MOUNT YOUR CONTESTANTS ROUTE
+
   app.use("/api/contestants", contestantsRoutes(contestantsCollection));
 
   app.use("/api/artist/register", artistRegisterRoutes(artistsCollection));
@@ -113,9 +111,9 @@ app.use("/api/artist-feedback", artistFeedbackRoutes(artistFeedbackCollection));
   );
 
 //   app.use(
-//     "/api/admin/pageant-checked-in", // Clean admin-spaced path
+//     "/api/admin/pageant-checked-in",
 //     requireAdmin,
-//     allowRoles("full", "pageant", "volunteer"), // Define who can view this data
+//     allowRoles("full", "pageant", "volunteer"), 
 //     getAllPageantCheckedInRoutes(pageantlistCollection)
 //   );
 
@@ -142,7 +140,7 @@ app.use(
 
 
 
-  // Start server
+ 
   app.listen(process.env.PORT, () =>
     console.log(`Server running on port ${process.env.PORT}`)
   );

@@ -37,10 +37,10 @@ export default function volunteerRegisterRoutes(volunteersCollection) {
         createdAt: new Date()
       };
 
-      // Insert into MongoDB
+      // MongoDB
       await volunteersCollection.insertOne(volunteerDoc);
 
-      // Generate QR Code (same settings as artist)
+      // Generate QR Code 
       const qrCodeDataUrl = await QRCode.toDataURL(qrId, {
         errorCorrectionLevel: "L",
         type: "image/png",
